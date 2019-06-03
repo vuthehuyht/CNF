@@ -264,25 +264,6 @@ public class CNF {
         }
     }
 
-    private void addTable(int row, int col, String N) {
-        if (!table[row][col].contains(N)) {
-            String cur = table[row][col];
-            if (cur.equals("-"))
-                cur = N;
-            else
-                cur += "," + N;
-            table[row][col] = cur;
-        }
-    }
-
-    private void printTable() {
-        for (int i = table.length - 1; i >= 0; i--) {
-            for (int j = 0; j < table.length; j++) {
-                System.out.print(table[i][j] + "\t");
-            }
-            System.out.println();
-        }
-    }
 
     public void setStartSymbol(String state) {
         if (N.contains(state))
@@ -334,39 +315,6 @@ public class CNF {
             return false;
         }
         return true;
-    }
-
-    public boolean solve() {
-        int n = T.size();
-        for (int s = 0; s < n; s++) {
-            for (int i = 0; i < grammar.size(); i++) {
-                ProductionRule productionRule = grammar.get(i);
-                if (productionRule.V.size() == 1 && productionRule.V.get(0).equals(T.get(s))) {
-                    addTable(0, s, productionRule.N.get(0));
-                }
-            }
-        }
-        for (int l = 1; l < n; l++) {
-            for (int s = 0; s < n - l; s++) {
-                for (int p = 1; p <= l; p++) {
-                    for (int i = 0; i < grammar.size(); i++) {
-                        ProductionRule rule = grammar.get(i);
-                        if (rule.V.size() == 2) {
-                            String a = rule.N.get(0);
-                            String b = rule.V.get(0);
-                            String c = rule.V.get(1);
-                            if (isNonterminalSymbol(b) && isNonterminalSymbol(c)) {
-                                if (table[p - 1][s].contains(b) && table[l - p][s + p].contains(c)) {
-                                    addTable(l, s, a);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        printTable();
-        return table[n - 1][0].contains(startSymbol);
     }
 
     public static void main(String[] args) {

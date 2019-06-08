@@ -2,13 +2,9 @@ import java.util.ArrayList;
 
 public class CNF {
     private ArrayList<String> N;
-    private ArrayList<String> T;
     private ArrayList<ProductionRule> grammar;
-    private String[][] table;
-    private String startSymbol;
 
     public void convertToChomskyNorm() {
-        removeStartStateOnRight();
         removeEpsilon();
         removeUnitProduction();
         removeMixed();
@@ -190,19 +186,6 @@ public class CNF {
         grammar.removeAll(productionRulesToRemove);
     }
 
-    private void removeStartStateOnRight() {
-        for (ProductionRule productionRule : grammar) {
-            if (productionRule.V.contains(startSymbol)) {
-                String newStartState = startSymbol;
-                do
-                    newStartState += "'";
-                while (N.contains(newStartState));
-                addProductionRule(newStartState + " -> " + startSymbol);
-                setStartSymbol(newStartState);
-                break;
-            }
-        }
-    }
 
     private void removeExistRule(ArrayList<ProductionRule> grammar) {
         ArrayList<ProductionRule> productionRulesToRemove = new ArrayList<ProductionRule>();
@@ -248,36 +231,9 @@ public class CNF {
         }
     }
 
-    public CNF(String input) {
+    public CNF() {
         N = new ArrayList<String>();
-        T = new ArrayList<String>();
-        String[] arr = input.split("\\s+");
-        for (int i = 0; i < arr.length; i++) {
-            T.add(arr[i]);
-        }
         grammar = new ArrayList<ProductionRule>();
-        table = new String[arr.length][arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr.length; j++) {
-                table[i][j] = "-";
-            }
-        }
-    }
-
-
-    public void setStartSymbol(String state) {
-        if (N.contains(state))
-            startSymbol = state;
-        else
-            System.err.println("Trang thai dau vao la khong o trong tap trang thai");
-    }
-
-    public ArrayList<String> getN() {
-        return N;
-    }
-
-    public ArrayList<String> getT() {
-        return T;
     }
 
     public void addProductionRule(String rule) {
